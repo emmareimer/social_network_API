@@ -1,16 +1,40 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-    // TODO: string, unique, required, trimmed
-  username: { type: String, required: true },
-  // TODO: string, unique, required, valid email
-  email: { type: String, required: true },
-  thoughts: [], // TODO:Array of _id values referencing the Thought model
-  friends: [], // TODO: Array of _id values referencing the User model (self-reference)
-  lastAccessed: { type: Date, default: Date.now },
-});
+const userSchema = new mongoose.Schema(
+  {
+  username: { 
+    type: String, 
+    required: true, 
+    unique: true, 
+    trim: true, },
+  email: { 
+    type: String, 
+    required: true,
+    unique: true,
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'] },
+    thoughts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Thought'
+      }
+    ], 
+    friends: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Thought'
+      }
+    ], 
+    lastAccessed: { type: Date, default: Date.now },
+  },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+    id: false,
+  }
+);
 
-// Create a virtual called friendCount that retrieves the length of the user's friends array field on query.
+// virtual called friendCount that retrieves the length of the user's friends array field on query.
 userSchema.virtual('friendCount').
   get(function() { return this.friends.length; }).
   set(function(v) {
