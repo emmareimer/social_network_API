@@ -1,20 +1,6 @@
 const { Thought, User } = require('../models');
 
-const thoughtController = {
-    // get all thoughts
-    getThoughts(req, res) {
-        Thought.find().then( (result) => {
-            if (result) {
-                res.status(200).json(result);
-            } 
-            }).catch((err) => {
-                console.log('whoops');
-                res.status(500).json({message: 'whoops, something went wrong'})
-            });
-        },
-
-//     // get a thought by id
-
+// Example data
 
 // {
 //     "thoughtText": "Here's a cool thought...",
@@ -22,7 +8,37 @@ const thoughtController = {
 //     "userId": "5edff358a0fcb779aa7b118b"
 // }
 
-//     // add a thought
+const thoughtController = {
+    // Get all thoughts
+    getThoughts(req, res) {
+        Thought.find().then( (result) => {
+            if (result) {
+                res.status(200).json(result);
+            } 
+            }).catch((err) => {
+                console.log('Oopsie');
+                res.status(500).json({message: 'Oops, something went wrong'})
+            });
+        },
+
+    // Get single thought by ID
+    getSingleThought({ params }, res) {
+        Thought.findOne({ _id: params.id})
+            .select('-__v')
+            .then(thoughtData => {
+                if(!thoughtData) {
+                    res.status(404).json({message: 'Oops, no thought found with this id.'});
+                    return;
+                }
+                res.json(thoughtData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).json(err);
+            });
+    },
+
+    // Add new thought
     addThought(req, res) {
         const newThought = new Thought(req.body);
         newThought.save();
@@ -34,31 +50,54 @@ const thoughtController = {
         }
     },
 
+    // Update a thought
+    updateThought(req, res) {
+        Thought.findOneAndUpdate(
+            // Finds first document with _id
+            { _id: req.params.id },
+            {thoughtText: req.body.thoughtText},
+            { new: true },
+            (err, result) => {
+                if (result) {
+                    res.status(200).json(result);
+                    console.log(`Updated: ${result}`);
+                } else {
+                    console.log('Oops, something went wrong');
+                    res.status(500).json({ message: 'Oops, something went wrong' });
+                }
+            })
+        },
 
-//     // update a thought
+    // Delete a thought
+    deleteThought({ params }, res) {
+        Thought.findOneAndDelete({ _id:params.id})
+        .then(thoughtData => {
+            if(!thoughtData) {
+                res.status(404).json({ message: 'Oops, no thought found with this ID.'});
+                return;
+            }
+            res.json(thoughtData)
+        })
+        .catch(err => res.status(400).json(err));
+    },
 
-
-//     // delete a thought
-
-
-//     // add reaction
+    // Add reaction
     addReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
             {_id: params.id},
             { $push: { reactions: body}},
             { new: true, runValidators: true}
         )
-        .then(socialNetworkDB => {
-            console.log("Updated reactions??\n\n", socialNetworkDB)
-            if (!socialNetworkDB) {
+        .then(thoughtData => {
+            console.log("Updated reactions??\n\n", thoughtData)
+            if (!thoughtData) {
                 res.status(404).json({ message: 'Oops, no thought found with this ID.'});
                 return;
             }
-            res.json(socialNetworkDB);
+            res.json(thoughtData);
         })
         .catch(err => res.json(err));
     }
-
 };
 
 module.exports = thoughtController;

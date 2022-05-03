@@ -13,11 +13,11 @@ router
     .route('/')
     .get(getThoughts);
 
-// router
-//     .route('/:id')
-//     .get(getSingleThought)
-//     .put(updateThought)
-//     .delete(deleteThought);
+router
+    .route('/:id')
+    .get(getSingleThought)
+    .put(updateThought)
+    .delete(deleteThought);
 
 router
     .route('/:id/reaction')

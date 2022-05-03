@@ -17,8 +17,8 @@ router
 // /api/user/:id
 router
     .route('/:id')
-//     .get(getSingleUser)
+    .get(getSingleUser)
     .put(updateUser)
-//     .delete(deleteUser);
+    .delete(deleteUser);
 
 module.exports = router; 
