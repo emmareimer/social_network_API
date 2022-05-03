@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     friends: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Thought'
+        ref: 'User'
       }
     ], 
     lastAccessed: { type: Date, default: Date.now },
