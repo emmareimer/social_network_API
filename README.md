@@ -35,7 +35,7 @@ Users can use this app to connect to a front end so that you are able to add a u
 You can also add friends and thoughts to the user. And reactions to those thoughts. You will be able to add/update/delete all of these.
 
 The following videos shows the functionality of the program:
-[Link to Video](ADD VIDEOs)
+[Link to Video]( https://drive.google.com/file/d/1_JWMpokIuzr6DFy_N3NG2NWTExsb1MPk/view)
 
 ## Tests
 For testing, make sure to seed users/thoughts/friends/reactions to the database using the example data given in the controllers.
