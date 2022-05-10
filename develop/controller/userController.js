@@ -103,20 +103,20 @@ const userController = {
             })
     },
 
-    // deleteFriend(req, res) {
-    //     User.findOneAndDelete(
-    //         { _id: req.params.id},
-    //         { $pull: { friends: req.params.friendId } },
-    //         { runValidators: true, new: true })
-    //         .then(userData => {
-    //             if(!userData) {
-    //                 res.status(404).json({ message: 'Oops, no user found with this ID.'});
-    //                 return;
-    //             }
-    //             res.json(userData)
-    //         })
-    //         .catch(err => res.status(400).json(err));
-    //     },
+    deleteFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.id},
+            { $pull: { friends: req.params.friendId } },
+            { runValidators: true, new: true })
+            .then(userData => {
+                if(!userData) {
+                    res.status(404).json({ message: 'Oops, no user found with this ID.'});
+                    return;
+                }
+                res.json(userData)
+            })
+            .catch(err => res.status(400).json(err));
+        },
     };
 
 
